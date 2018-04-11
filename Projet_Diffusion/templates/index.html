@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//">
+    <html lang="fr-FR" >
+    <meta charset="UTF-8">
+        <head>
+           <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='Style.css') }}">
+        </head>
+        <title>Projet Diffusion</title>
+         <body></body>
+            <section style="margin: 10px;">
+            <fieldset style="min-height:100px;">
+                <legend><b> Critères de recherches </b> </legend>
+                <form method="post">
+                    <p>
+                        <label for="album">Titre :</label>
+                        <input class ="text" type=”text” name=”text” />
+                    </p>
+                    <p>
+                        <label for="artiste">Artiste :</label>
+                        <SELECT name="artiste" size="1" >
+                        <OPTION selected="selected"> -- Choisis ton artiste </OPTION>
+                        {% for i in artist %}
+                            {% for a in i %}
+                            <OPTION>{{a}} </OPTION>
+                            {% endfor %}
+                        {% endfor %}
+                        </SELECT>
+                    </p>
+                    
+                    <p>
+                        <label for="genre">Genre :</label>
+                        <SELECT name="genre" size="1">              
+                        <OPTION selected="selected"> -- Choisis ton genre </OPTION>
+                        {% for i in gender %}
+                            {% for g in i %}
+                            <OPTION>{{g}} </OPTION>
+                            {% endfor %}
+                        {% endfor %}
+                        </SELECT>                        
+                    </p>
+
+                   <p>
+                        <label for="album">Sujet :</label>
+                        <SELECT name="nom" size="1">
+                        <OPTION selected="selected"> -- Choisis ton sujet </OPTION>
+                        {% for i in subject %}
+                            {% for s in i %}
+                            <OPTION>{{s}} </OPTION>
+                            {% endfor %}
+                        {% endfor %}
+                        </SELECT>
+                   </p>
+
+                   <p>
+                        <label for="album">Compositeur :</label>
+                        <SELECT name="nom" size="1">
+                        <OPTION selected="selected"> -- Choisis ton compositeur </OPTION>
+                        {% for i in composer %}
+                            {% for c in i %}
+                            <OPTION>{{c}} </OPTION>
+                            {% endfor %}
+                        {% endfor %}
+                        </SELECT>
+                   </p>
+                   <p>
+                        <label for="album">Note :</label>
+                        <SELECT name="nom" size="1">
+                        <OPTION selected="selected"> -- Choisis ta note </OPTION>
+                        {% for i in rating %}
+                            {% for r in i %}
+                            <OPTION>{{r}} </OPTION>
+                            {% endfor %}
+                        {% endfor %}
+                        </SELECT>
+                   </p>
+                    <p class="button">
+                        <button type="submit" class="button">Valider</button>
+                    </p>
+                </form>
+            </fieldset>
+            <fieldset style="min-height:100px;">
+                <legend><b> Requêtes SPARQL </b> </legend>
+            {% for chanson in listeChansons %}
+            <p>{{ chanson }}</p>
+            {% endfor %}
+
+            {% if un==1 %}
+                <h1 style="color:red">{{ un }}</h1>
+            {% endif %}
+            </fieldset>
+            <fieldset style="min-height:100px;">
+                <legend><b> Lecture de diffusion </b> </legend>
+            </section>
+         </body>
+    </html>
+</DOCTYPE>
+
