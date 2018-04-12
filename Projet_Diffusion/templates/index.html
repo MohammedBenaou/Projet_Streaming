@@ -8,7 +8,7 @@
          <body></body>
             <section style="margin: 10px;">
             <fieldset style="min-height:100px;">
-                <legend><b> Critères de recherches </b> </legend>
+                <legend><b> Recherche </b> </legend>
                 <form action = "http://localhost:5000/result" method = "POST">
                     <p>
                         <label for="artiste">Artiste :</label>
@@ -36,7 +36,7 @@
 
                    <p>
                         <label for="album">Sujet :</label>
-                        <SELECT name="nom" size="1">
+                        <SELECT name="sujet" size="1">
                         <OPTION selected="selected"></OPTION>
                         {% for i in subject %}
                             {% for s in i %}
@@ -48,7 +48,7 @@
 
                    <p>
                         <label for="album">Compositeur :</label>
-                        <SELECT name="nom" size="1">
+                        <SELECT name="Compositeur" size="1">
                         <OPTION selected="selected"></OPTION>
                         {% for i in composer %}
                             {% for c in i %}
@@ -74,12 +74,14 @@
                 </form>
             </fieldset>
             <fieldset style="min-height:100px;">
-                <legend><b> Requêtes SPARQL </b> </legend>
-                        {% for row in titles: %}
-				{% for col in row: %}
-                                <a href><OPTION>{{col}}</OPTION>
-				{% endfor %}
-                        {% endfor %}
+                <legend><b> Résultat </b> </legend>
+                        {%for row in results%}
+                            {%for value in row%}
+                                {% set value = value.split("Musique/")[1] %}
+                                 {% set value = value[:-4] %}
+                                 <a href="{{value}}">{{value}}</a><br/>
+                            {%endfor%}
+				        {%endfor%}
             </fieldset>
             </section>
          </body>

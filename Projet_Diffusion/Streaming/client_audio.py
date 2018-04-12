@@ -32,7 +32,7 @@ p = pyaudio.PyAudio()
 print(p)
 
 #Ouverture fichier pour enregistrement
-result = wave.open('downloaded.wav', 'wb')
+result = wave.open('Newfile.wav', 'wb')
 
 
 #Réception des paramètres du fichier audio

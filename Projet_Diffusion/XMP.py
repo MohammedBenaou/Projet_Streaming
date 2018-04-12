@@ -12,10 +12,10 @@ GlobalG= Graph()
 #parcourir le dossier musique
 for file in wav_file:
 	# on recupere le nom du fichier
-     nom=file.split('/',4)[3]
-     name=nom.split('.',1)[0]
+     #nom=file.split('/',4)[3]
+     #name=nom.split('.',1)[0]
 	#on stock le fichier dans un dossier
-     fichier = open("./RDF/"+name+".rdf", "w")
+     fichier = open(file+".txt", "w")
 	# lecture du chaque fichier wav
      xmpfile = libxmp.XMPFiles( file_path=file , open_forupdate=False)
 	# recuperer les metadonees de chaque fichier
@@ -37,7 +37,7 @@ for file in wav_file:
      #Fermeture du fichier
      fichier.close()
      #Ajout du code RDF dans le graphe global
-     GlobalG.parse("./RDF/"+name+".rdf")
+     GlobalG.parse(file+'.txt')
 
 
 #Exportation du graphe dans un fichier

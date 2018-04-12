@@ -68,73 +68,57 @@ def index():
                            composer=composer, 
                            subject=subject, 
                            rating=rating)
+
 @app.route('/result',methods = ['POST', 'GET'])
 def result():
-   g = rdflib.Graph()
 
-# ... add some triples to g somehow ...
-   g.parse("GlobalG.rdf")
-   if request.method == 'POST':
-      result = request.form
-      if(request.form['genre'] != ''):
-          titles = search_by_genre(request.form['genre'])
+  result_genre= request.form['genre']
+  result_rating= request.form['rank']
+  result_artist= request.form['artiste']
+  result_sujet= request.form['sujet']
+  
+  g=rdflib.Graph()
+  g.parse("GlobalG.rdf")
 
-      if(request.form['rank'] != ''):
-          titles = search_by_ranking(request.form['rank'])
+    #query = "SELECT DISTINCT ?x WHERE { ?x <http://ns.adobe.com/xmp/1.0/DynamicMedia/artist> \"Hicham Chahidi\" . }"
 
-      if(request.form['artiste'] != ''):
-          titles = search_by_artist(request.form['artiste'])
 
-      for row in titles:
-         for col in row:
-            print (col)
-      return render_template("index.html",titles=titles)
+  query = "SELECT DISTINCT ?x WHERE { "
+    #Artiste
+  if result_artist != "":
+    query = query + "?x <http://ns.adobe.com/xmp/1.0/DynamicMedia/artist> \"" + result_artist + "\" . "
+  else:
+    query = query + "?x <http://ns.adobe.com/xmp/1.0/DynamicMedia/artist> ?artist . "
 
-def search_by_artist(artist):
-    g = rdflib.Graph()
-    g.parse("GlobalG.rdf")
-    titles = g.query(
-            """PREFIX xmpDM: <http://ns.adobe.com/xmp/1.0/DynamicMedia/>
-    PREFIX dc: <http://purl.org/dc/elements/1.1/>
-    SELECT DISTINCT ?artist
-    WHERE {
-      ?res xmpDM:genre  """+"\"" +artist+ "\"" + """ .
-      ?res dc:title ?na . ?na ?x ?titre . FILTER (?titre != rdf:Alt) 
-    }
-    ORDER BY(?artist)""")
-    return titles
+  #Rating
+  if result_rating != "":
+    query = query + "?x <http://ns.adobe.com/xap/1.0/Rating> \"" + result_rating + "\" . "
+  query = query + "?x <http://ns.adobe.com/xap/1.0/Rating> ?rating . "
 
-def search_by_genre(genre):
-	g = rdflib.Graph()
-	g.parse("GlobalG.rdf")
+  #Genre
+  if result_genre != "":
+    query = query + "?x <http://ns.adobe.com/xmp/1.0/DynamicMedia/genre> \"" + result_genre + "\" . "
+  else:
+    query = query + "?x <http://ns.adobe.com/xmp/1.0/DynamicMedia/genre> ?genre . "
 
-	titles = g.query(
-            """PREFIX xmpDM: <http://ns.adobe.com/xmp/1.0/DynamicMedia/>
-		PREFIX dc: <http://purl.org/dc/elements/1.1/>
-		SELECT DISTINCT  ?titre
-		WHERE {
-			?res xmpDM:genre  """+"\"" +genre+ "\"" + """ .
-			?res dc:title ?na . ?na ?x ?titre . FILTER (?titre != rdf:Alt) 
-		} ORDER BY ASC(?titre)
-		""")
-	return titles
+  #Titre
+  query = query + "?x <http://purl.org/dc/elements/1.1/title> ?y . "
+  query = query + "?y ?prop1 ?title . "
 
-def search_by_ranking(rank):
-	g = rdflib.Graph()
-	g.parse("GlobalG.rdf")
+  #Sujet
+  if result_sujet != "":
+    query = query + "?z <http://purl.org/dc/elements/1.1/subject> \"" + result_sujet + "\" . "
+  else:
+    query = query + "?z ?prop2 ?subject . "
 
-	titles = g.query(
-            """PREFIX xmp:<http://ns.adobe.com/xap/1.0/>
-		PREFIX dc: <http://purl.org/dc/elements/1.1/>
-		SELECT  DISTINCT ?titre
-		WHERE { 
-			?res  xmp:Rating  """+"\"" +rank+ "\"" + """ .
-			?res dc:title ?na . ?na ?x ?titre . FILTER (?titre != rdf:Alt) 
-		}ORDER BY ASC(?titre)
+  #Filtres
+  query = query + " FILTER(?prop1 != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) . "
+  query = query + " FILTER(?prop2 != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>) . "
+  query = query + " }"
 
-		""")
-	return titles
-
+  print (query)
+  results = g.query(query)
+  return render_template('index.html', results=results)
 
 
 if __name__ == '__main__':
